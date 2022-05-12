@@ -1,0 +1,7 @@
+CREATE OR ALTER PROCEDURE spLogin @UserName AS VARCHAR(255), @UserPassword AS VARCHAR(255)
+AS
+BEGIN
+	SELECT UserID, UserName, UserPassword, RoleID
+	FROM Users
+	WHERE UserName = @UserName AND UserPassword = @UserPassword
+END

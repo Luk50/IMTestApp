@@ -1,0 +1,32 @@
+USE [master];
+
+CREATE DATABASE IM_Test;
+
+CREATE LOGIN [IM_User] WITH PASSWORD='IMPass!123', DEFAULT_DATABASE=IM_Test, CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF;
+
+USE IM_Test;
+
+CREATE USER [IM_User] FOR LOGIN [IM_User] WITH DEFAULT_SCHEMA = [dbo];
+EXEC sp_addrolemember 'db_owner', 'IM_User';
+
+CREATE TABLE [IM_Test].[dbo].Roles (
+    RoleID int IDENTITY(1,1) PRIMARY KEY,
+    RoleName varchar(255) NOT NULL
+);
+
+CREATE UNIQUE INDEX RoleNameIDX ON Roles (RoleName);
+
+CREATE TABLE [IM_Test].[dbo].Users (
+    UserID int IDENTITY(1,1) PRIMARY KEY,
+    UserName varchar(255) NOT NULL,
+    UserPassword varchar(255) NOT NULL,
+	RoleID int FOREIGN KEY REFERENCES Roles(RoleID)
+);
+
+CREATE UNIQUE INDEX UserNameIDX ON Users (UserName);
+
+INSERT INTO Roles (RoleName) 
+	VALUES ('Admnistrator'), ('Power User'), ('User');
+
+INSERT INTO Users (UserName, UserPassword, RoleID) 
+	VALUES ('John Steel', 'JSPass@321', 1), ('Nick Copper', 'IronMan!456', 1);
